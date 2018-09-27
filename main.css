@@ -1,6 +1,6 @@
 #userGrid{
-  margin-top: 50px;
-  margin-left: 50px;
+  margin-top: 59px;
+  margin-left: 59px;
   width: 660px;
   height: 660px;
   background: #778899;
@@ -26,4 +26,13 @@
   margin-right: 0px;
   text-align: center;
   line-height: 60px;
+  background: #696969;
+}
+
+.ship{
+  position: absolute;
+  height: 58px;
+  border: 1px solid #000000;
+  border-radius: 50%;
+  background: #C0C0C0;
 }
