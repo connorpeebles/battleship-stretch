@@ -35,17 +35,24 @@ function fillGrid(grid) {
 
 function placeShip(shipName, numTiles, grid) {
 
-  var ship = $("<div>").attr("id","battleship").addClass("ship");
+  var ship = $("<div>").attr("id",shipName).addClass("ship");
   $(ship).css({width: 60*numTiles-2});
   $(grid).append(ship);
 
   $(document).ready(function() {
-    $("#battleship").draggable({opacity: 0.6, grid: [60,60], containment: [120,60,480,660]});
+    $("#"+shipName).draggable({opacity: 0.6, grid: [60,60], containment: grid});
   });
-  $("#battleship").dblclick(function() {
+  $("#"+shipName).dblclick(function() {
     var tempH = $(this).css("height");
     var tempW = $(this).css("width");
     $(this).css({height: tempW, width: tempH});
+  });
+  $(document).keypress(function(e) {
+    if(e.which == 13) {
+      var Top = (parseInt($("#"+shipName).css("Top")) + 1) / 60;
+      var Left = (parseInt($("#"+shipName).css("Left")) - 7) / 60;
+      $("#"+shipName).text(Top + ", " + Left);
+    }
   });
 }
 
