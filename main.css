@@ -11,8 +11,6 @@
   width: 58px;
   height: 58px;
   border: 1px solid #000000;
-  margin-left: 0px;
-  margin-right: 0px;
   text-align: center;
   line-height: 60px;
 }
@@ -22,8 +20,6 @@
   width: 58px;
   height: 58px;
   border: 1px solid #000000;
-  margin-left: 0px;
-  margin-right: 0px;
   text-align: center;
   line-height: 60px;
   background: #696969;
@@ -35,4 +31,8 @@
   border: 1px solid #000000;
   border-radius: 50%;
   background: #C0C0C0;
+}
+
+.ship2{
+  width: 58px;
 }

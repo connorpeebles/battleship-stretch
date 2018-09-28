@@ -40,7 +40,12 @@ function placeShip(shipName, numTiles, grid) {
   $(grid).append(ship);
 
   $(document).ready(function() {
-    $("#battleship").draggable({opacity: 0.6, grid: [60,60]});
+    $("#battleship").draggable({opacity: 0.6, grid: [60,60], containment: [120,60,480,660]});
+  });
+  $("#battleship").dblclick(function() {
+    var tempH = $(this).css("height");
+    var tempW = $(this).css("width");
+    $(this).css({height: tempW, width: tempH});
   });
 }
 
