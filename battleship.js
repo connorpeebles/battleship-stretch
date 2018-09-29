@@ -1,7 +1,4 @@
-// function Ship(shipName, numTiles) {
-//   this.shipName = name;
-//   this.numTiles = numTiles;
-// }
+var fleet = require("./ships");
 
 function fillGrid(grid) {
 
@@ -30,14 +27,18 @@ function fillGrid(grid) {
       $(grid).append(coord);
     }
   }
-  placeShip("battleship", 4, grid);
+
 }
 
 function placeShip(shipName, numTiles, grid) {
 
+  $("#instructionBox").text("Use your mouse to drag and place your " + shipName + ". Double-click with your mouse to switch the ship's orientation. Press ENTER to confirm the ship's location.");
+
   var ship = $("<div>").attr("id",shipName).addClass("ship");
   $(ship).css({width: 60*numTiles-2});
   $(grid).append(ship);
+
+  var vertical = false;
 
   $(document).ready(function() {
     $("#"+shipName).draggable({opacity: 0.6, grid: [60,60], containment: grid});
@@ -45,15 +46,31 @@ function placeShip(shipName, numTiles, grid) {
   $("#"+shipName).dblclick(function() {
     var tempH = $(this).css("height");
     var tempW = $(this).css("width");
+    vertical = !vertical;
     $(this).css({height: tempW, width: tempH});
   });
   $(document).keypress(function(e) {
     if(e.which == 13) {
-      var Top = (parseInt($("#"+shipName).css("Top")) + 1) / 60;
-      var Left = (parseInt($("#"+shipName).css("Left")) - 7) / 60;
-      $("#"+shipName).text(Top + ", " + Left);
+      var Top = Math.round(parseInt($("#"+shipName).css("Top")) / 60);
+      var Left = Math.round(parseInt($("#"+shipName).css("Left")) / 60);
+
+      for (var i = 0; i < numTiles; i++) {
+
+      }
+
+      $("#instructionBox").text("lol")
+
+      $("#"+shipName).text(Left + ", " + Top);
     }
   });
+}
+
+function playBattleship() {
+  var userGrid = $("#userGrid")[0];
+
+  fillGrid(userGrid);
+
+  placeShip("battleship", 4, userGrid);
 }
 
 function click(grid) {

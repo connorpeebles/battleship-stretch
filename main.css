@@ -1,5 +1,14 @@
-#userGrid{
+#title{
   margin-top: 59px;
+  margin-left: 59px;
+  width: 1380px;
+  height: 60px;
+  font-size: 24pt;
+  font-weight: bold;
+  text-align: center;
+}
+
+#userGrid{
   margin-left: 59px;
   width: 660px;
   height: 660px;
@@ -26,13 +35,18 @@
 }
 
 .ship{
-  position: absolute;
+  top: 60px;
+  left: 60px;
   height: 58px;
   border: 1px solid #000000;
   border-radius: 50%;
   background: #C0C0C0;
 }
 
-.ship2{
-  width: 58px;
+#instructionBox{
+  margin-top: 59px;
+  margin-left: 59px;
+  width: 1380px;
+  height: 200px;
+  font-size: 18pt;
 }
