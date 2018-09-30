@@ -63,7 +63,7 @@ function placeShips(shipName, numTiles, index, grid) {
     return null;
   }
 
-  $("#instructionBox").text("Use your mouse to drag and place your \"" + shipName + "\" ship. Double-click with your mouse to switch the ship's orientation. Press any key to confirm the ship's location.");
+  $("#instructionBox").text("Use your mouse to drag and place your \"" + shipName + "\" ship. Double-click the ship with your mouse to switch the ship's orientation. Press any key to confirm the ship's location.");
 
   var ship = $("<div>").attr("id",shipName).addClass("ship");
   $(ship).css({width: 60*numTiles-2});
@@ -74,18 +74,27 @@ function placeShips(shipName, numTiles, index, grid) {
   $("#"+shipName).draggable({opacity: 0.6, grid: [60,60], containment: grid});
 
   $("#"+shipName).dblclick(function() {
-    var tempH = $(this).css("height");
-    var tempW = $(this).css("width");
+    var Top = parseInt($(this).css("top"));
+    var Left = parseInt($(this).css("left"));
+    var tempH = parseInt($(this).css("height"));
+    var tempW = parseInt($(this).css("width"));
+
+    if (Top + tempW > 655) {
+      Top = 660 - (60 * numTiles);
+    }
+    if (Left + tempH > 655) {
+      Left = 660 - (60 * numTiles);
+    }
     vertical = !vertical;
-    $(this).css({height: tempW, width: tempH});
+    $(this).css({height: tempW, width: tempH, top: Top, left: Left});
   });
 
   $(document).keypress(function() {
-    var Top = Math.round(parseInt($("#"+shipName).css("Top")) / 60);
-    var Left = Math.round(parseInt($("#"+shipName).css("Left")) / 60);
+    var Top = Math.round(parseInt($("#"+shipName).css("top")) / 60);
+    var Left = Math.round(parseInt($("#"+shipName).css("left")) / 60);
 
     if (Top === 0 || Left === 0 || vertical && Top > (11 - numTiles) || !vertical && Left > (11 - numTiles)) {
-      $("#instructionBox").text("Please place your " + shipName + " within the confines of the grid.");
+      $("#instructionBox").text("Please place your " + shipName + " within the confines of the grid (on the blue squares).");
 
     }
     else {
