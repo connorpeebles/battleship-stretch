@@ -2,31 +2,26 @@ var fleet = [
   {
     name: "carrier",
     numCoords: 5,
-    placed: false,
     coords: []
   },
   {
     name: "battleship",
     numCoords: 4,
-    placed: false,
     coords: []
   },
   {
     name: "cruiser",
     numCoords: 3,
-    placed: false,
     coords: []
   },
   {
     name: "submarine",
     numCoords: 3,
-    placed: false,
     coords: []
   },
   {
     name: "destroyer",
     numCoords: 2,
-    placed: false,
     coords: []
   }
 ];
@@ -61,7 +56,12 @@ function fillGrid(grid) {
 
 }
 
-function placeShip(shipName, numTiles, index, grid) {
+function placeShips(shipName, numTiles, index, grid) {
+
+  if (index === 4) {
+    $("#instructionBox").text("Done");
+    return null;
+  }
 
   $("#instructionBox").text("Use your mouse to drag and place your \"" + shipName + "\" ship. Double-click with your mouse to switch the ship's orientation. Press any key to confirm the ship's location.");
 
@@ -87,17 +87,18 @@ function placeShip(shipName, numTiles, index, grid) {
     if (Top === 0 || Left === 0 || vertical && Top > (11 - numTiles) || !vertical && Left > (11 - numTiles)) {
       $("#instructionBox").text("Please place your " + shipName + " within the confines of the grid.");
 
-    } else {
-    for (var i = 0; i < numTiles; i++) {
-      if (vertical) {
-        fleet[index].coords.push([Left, Top + i]);
-      } else {
-        fleet[index].coords.push([Left + i, Top]);
-      }
     }
-    $("#"+shipName).off();
-    $(document).off();
-    fleet[index].placed = true;
+    else {
+      for (var i = 0; i < numTiles; i++) {
+        if (vertical) {
+          fleet[index].coords.push([Left, Top + i]);
+        } else {
+          fleet[index].coords.push([Left + i, Top]);
+        }
+      }
+      $("#"+shipName).off();
+      $(document).off();
+      return null;
   }
   });
 }
@@ -107,16 +108,10 @@ function playBattleship() {
 
   fillGrid(userGrid);
 
+  placeShips(fleet[0].name, fleet[0].numCoords, 0, userGrid);
 
+  // placeShips(fleet[1].name, fleet[1].numCoords, 1, userGrid);
 
-  // while (fleet[0].placed = false) {
-
-  placeShip(fleet[0].name, fleet[0].numCoords, 0, userGrid);
-
-  // placeShip(fleet[1].name, fleet[1].numCoords, 0, userGrid);
-  // placeShip(fleet[2].name, fleet[2].numCoords, 0, userGrid);
-  // placeShip(fleet[3].name, fleet[3].numCoords, 0, userGrid);
-  // placeShip(fleet[4].name, fleet[4].numCoords, 0, userGrid);
 }
 
 function click(grid) {

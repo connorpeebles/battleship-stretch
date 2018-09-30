@@ -35,9 +35,8 @@
 }
 
 .ship{
-  position: absolute;
-  top: 179px;
-  left: 127px;
+  top: 60px;
+  left: 60px;
   height: 58px;
   border: 1px solid #000000;
   border-radius: 50%;
