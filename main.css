@@ -9,6 +9,8 @@
 }
 
 #userGrid{
+  position: relative;
+  margin-top: 59px;
   margin-left: 59px;
   width: 660px;
   height: 660px;
@@ -35,6 +37,62 @@
 }
 
 .ship{
+  position: relative;
+  top: 60px;
+  left: 60px;
+  height: 58px;
+  border: 1px solid #000000;
+  border-radius: 50%;
+  background: #C0C0C0;
+}
+
+#carrier{
+  width: 298px;
+  position: absolute;
+  top: 60px;
+  left: 60px;
+  height: 58px;
+  border: 1px solid #000000;
+  border-radius: 50%;
+  background: #C0C0C0;
+}
+
+#battleship{
+  width: 238px;
+  position: absolute;
+  top: 60px;
+  left: 60px;
+  height: 58px;
+  border: 1px solid #000000;
+  border-radius: 50%;
+  background: #C0C0C0;
+}
+
+#cruiser{
+  width: 178px;
+  position: absolute;
+  top: 60px;
+  left: 60px;
+  height: 58px;
+  border: 1px solid #000000;
+  border-radius: 50%;
+  background: #C0C0C0;
+}
+
+#submarine{
+  width: 178px;
+  position: absolute;
+  top: 60px;
+  left: 60px;
+  height: 58px;
+  border: 1px solid #000000;
+  border-radius: 50%;
+  background: #C0C0C0;
+}
+
+#destroyer{
+  width: 118px;
+  position: absolute;
   top: 60px;
   left: 60px;
   height: 58px;
