@@ -234,7 +234,6 @@ function checkHit(coord, fleet) {
 
     if (index > -1) {
       fleet[ship]["coords"].splice(index, 1);
-      console.log(fleet[ship]["coords"]);
       return true;
     }
   }
@@ -246,14 +245,19 @@ function userTurn() {
   $("#instructionBox").text("Your turn! Click any blue square on your opponent's grid to fire!");
 
   $(".coord").click(function() {
-    if ($(this).css("background") === "#FF0000" || $(this).css("background") === "#FFFFFF") {
+    let y = Math.round(parseInt($(this).css("marginTop")) / 60);
+    let x = Math.round(parseInt($(this).css("marginLeft")) / 60);
+    let coord = `${x},${y}`;
+
+    if (guesses.includes(coord)) {
       $("#instructionBox").text("You've already fired here! Click any blue square on your opponent's grid.");
+    } else if (checkHit(coord, compFleet)) {
+      $(this).css({background: "#FF0000"});
     } else {
-      let y = Math.round(parseInt($(this).css("marginTop")) / 60);
-      let x = Math.round(parseInt($(this).css("marginLeft")) / 60);
-      let coord = `${x},${y}`;
-      console.log(checkHit(coord, compFleet));
+      $(this).css({background: "#FFFFFF"});
     }
+
+    guesses.push(coord);
   })
 }
 
