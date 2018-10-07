@@ -62,6 +62,7 @@ const compFleet = [
 let coords = [];
 let compCoords = [];
 let guesses = [];
+let compGuesses = [];
 
 function fillGrid(grid) {
 
@@ -241,7 +242,6 @@ function checkHit(coord, fleet) {
         $("#instructionBox").text(`Hit! You sunk your opponent's ${shipName}!`);
       } else {
         $("#instructionBox").text(`Hit!`);
-
       }
 
       return true;
@@ -250,6 +250,29 @@ function checkHit(coord, fleet) {
 
   $("#instructionBox").text(`Miss!`);
   return false;
+}
+
+function checkCompHit(coord, fleet) {
+
+  for (let ship of fleet) {
+    let index = ship.coords.indexOf(coord);
+
+    if (index > -1) {
+      ship.coords.splice(index, 1);
+
+      if (ship.coords.length === 0) {
+        let shipName = ship.name;
+        index = fleet.indexOf(ship);
+        fleet.splice(index,1);
+        $("#instructionBox").text(`Your opponent fired and sunk your ${shipName}!`);
+      } else {
+        $("#instructionBox").text(`Your opponent fired! It was a hit!`);
+      }
+
+    }
+  }
+
+  $("#instructionBox").text(`Your opponent fired! It was a miss!`);
 }
 
 function userTurn() {
@@ -264,13 +287,54 @@ function userTurn() {
       $("#instructionBox").text("You've already fired here! Click any blue square on your opponent's grid.");
     } else if (checkHit(coord, compFleet)) {
       $(this).css({background: "#FF0000"});
+      guesses.push(coord);
+
+      if (compFleet.length === 0) {
+        $("#instructionBox").text("Congratulations! You win! :)");
+        return;
+      }
+
+      compTurn();
+
     } else {
       $(this).css({background: "#FFFFFF"});
+      guesses.push(coord);
+      compTurn();
+    }
+  })
+}
+
+function compGuess() {
+  let x =  Math.ceil(Math.random() * 10);
+  let y =  Math.ceil(Math.random() * 10);
+  let coord = `${x},${y}`;
+
+  if (compGuesses.includes(coord)) {
+    compGuess();
+  } else {
+    let hit = console.log(coord);
+    checkCompHit(coord, fleet);
+    compGuesses.push(coord);
+    let guess = $("<div>").addClass("compGuess");
+    $(guess).css({marginLeft: (60*x)+"px", marginTop: (60*y)+"px"});
+    $(guess).text("x");
+
+    if (hit) {
+      $(guess).css({color: "#FF0000"});
     }
 
-    guesses.push(coord);
-    console.log(compFleet);
-  })
+    $("#userGrid").append(guess);
+
+    if (fleet.length === 0) {
+      $("#instructionBox").text("You lose :(");
+      return;
+    }
+  }
+}
+
+function compTurn() {
+  setTimeout(compGuess, 3000);
+  setTimeout(userTurn, 3000);
 }
 
 function playBattleship() {
