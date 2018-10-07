@@ -1,4 +1,4 @@
-var fleet = [
+const fleet = [
   {
     name: "carrier",
     numCoords: 5,
@@ -31,14 +31,14 @@ var fleet = [
   }
 ];
 
-var lol = [];
+let coords = [];
 
 function fillGrid(grid) {
 
-  var refCoord = $("<div>").addClass("ref");
+  let refCoord = $("<div>").addClass("ref");
   $(grid).append(refCoord);
 
-  for (var i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 10; i++) {
 
     refCoord = $("<div>").addClass("ref");
     $(refCoord).css({marginLeft: (60*i)+"px"});
@@ -46,21 +46,56 @@ function fillGrid(grid) {
     $(grid).append(refCoord);
   }
 
-  for (var i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 10; i++) {
 
     refCoord = $("<div>").addClass("ref");
     $(refCoord).css({marginTop: (60*i)+"px"});
     $(refCoord).text(i);
     $(grid).append(refCoord);
 
-    for (var j = 1; j <= 10; j++) {
+    for (let j = 1; j <= 10; j++) {
 
-      var coord = $("<div>").addClass("coord");
+      let coord = $("<div>").addClass("coord");
       $(coord).css({marginTop: (60*i)+"px", marginLeft: (60*j)+"px"});
       $(grid).append(coord);
     }
   }
 
+}
+
+function checkCoords(top, left, vertical, ship) {
+  let numCoords = ship.numCoords;
+  let shipCoords = [];
+
+  console.log("Coords (beginning): ", coords);
+
+  while (numCoords > 0) {
+    let coord = `${left},${top}`;
+
+    console.log("Coord: ", coord);
+
+    if (coords.includes(coord)) {
+      return false;
+    } else {
+      shipCoords.push(coord);
+
+      if (vertical) {
+        top++;
+      } else {
+        left++;
+      }
+
+      numCoords--;
+    }
+  }
+
+  ship.coords = shipCoords;
+  coords = coords.concat(shipCoords);
+
+  console.log("shipCoords (end): ", shipCoords);
+  console.log("Coords (end): ", coords);
+
+  return true;
 }
 
 function placeShips(fleet, grid) {
@@ -69,23 +104,23 @@ function placeShips(fleet, grid) {
     return;
   }
 
-  var ship = fleet[0].jq;
-  var shipName = fleet[0].name;
-  var numTiles = fleet[0].numCoords;
+  let ship = fleet[0].jq;
+  let shipName = fleet[0].name;
+  let numTiles = fleet[0].numCoords;
 
   $("#instructionBox").text("Use your mouse to drag and place your \"" + shipName + "\" ship. Double-click the ship with your mouse to switch the ship's orientation. Press Enter to confirm the ship's location.");
 
   $(grid).append(ship);
 
-  var vertical = false;
+  let vertical = false;
 
   $(ship).draggable({opacity: 0.6, grid: [60,60], containment: grid});
 
   $(ship).dblclick(function() {
-    var Top = parseInt($(ship).css("top"));
-    var Left = parseInt($(ship).css("left"));
-    var tempH = parseInt($(ship).css("height"));
-    var tempW = parseInt($(ship).css("width"));
+    let Top = parseInt($(ship).css("top"));
+    let Left = parseInt($(ship).css("left"));
+    let tempH = parseInt($(ship).css("height"));
+    let tempW = parseInt($(ship).css("width"));
 
     if (Top + tempW > 655) {
       Top = 660 - (60 * numTiles);
@@ -98,10 +133,19 @@ function placeShips(fleet, grid) {
   });
 
   $(document).keypress(function(e) {
+
     if(e.which === 13) {
-      $("#"+shipName).off();
-      // lol.push(index);
-      placeShips(fleet.slice(1), grid);
+      let Top = Math.round(parseInt($(ship).css("top")) / 60);
+      let Left = Math.round(parseInt($(ship).css("left")) / 60);
+
+      if (Top === 0 || Left === 0) {
+        $("#instructionBox").text("Please place your ship in the water (blue squares)!");
+      } else if (!checkCoords(Top, Left, vertical, fleet[0])) {
+        $("#instructionBox").text("Please don't place your ships on top of each other!");
+      } else {
+        $("#"+shipName).off();
+        placeShips(fleet.slice(1), grid);
+      }
     }
     // var Top = Math.round(parseInt($("#"+shipName).css("top")) / 60);
     // var Left = Math.round(parseInt($("#"+shipName).css("left")) / 60);
