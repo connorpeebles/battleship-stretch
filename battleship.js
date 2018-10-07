@@ -31,7 +31,37 @@ const fleet = [
   }
 ];
 
+const compFleet = [
+  {
+    name: "carrier",
+    numCoords: 5,
+    coords: []
+  },
+  {
+    name: "battleship",
+    numCoords: 4,
+    coords: []
+  },
+  {
+    name: "cruiser",
+    numCoords: 3,
+    coords: []
+  },
+  {
+    name: "submarine",
+    numCoords: 3,
+    coords: []
+  },
+  {
+    name: "destroyer",
+    numCoords: 2,
+    coords: []
+  }
+];
+
 let coords = [];
+let compCoords = [];
+let guesses = [];
 
 function fillGrid(grid) {
 
@@ -70,8 +100,6 @@ function checkCoords(top, left, vertical, ship) {
   while (numCoords > 0) {
     let coord = `${left},${top}`;
 
-    console.log("Coord: ", coord);
-
     if (coords.includes(coord)) {
       return false;
     } else {
@@ -92,9 +120,37 @@ function checkCoords(top, left, vertical, ship) {
   return true;
 }
 
+function checkCompCoords(top, left, vertical, ship) {
+  let numCoords = ship.numCoords;
+  let shipCoords = [];
+
+  while (numCoords > 0) {
+    let coord = `${left},${top}`;
+
+    if (compCoords.includes(coord)) {
+      return false;
+    } else {
+      shipCoords.push(coord);
+
+      if (vertical) {
+        top++;
+      } else {
+        left++;
+      }
+
+      numCoords--;
+    }
+  }
+
+  ship.coords = shipCoords;
+  compCoords = compCoords.concat(shipCoords);
+  return true;
+}
+
 function placeShips(fleet, grid) {
 
-  if (fleet === []) {
+  if (fleet.length === 0) {
+    userTurn();
     return;
   }
 
@@ -144,15 +200,74 @@ function placeShips(fleet, grid) {
   });
 }
 
+function placeCompShips(fleet) {
+
+  if (fleet.length === 0) {
+    return;
+  }
+
+  let numTiles = fleet[0].numCoords;
+  let vertical = Math.floor(Math.random() * 2);
+  let top;
+  let left;
+
+  if (vertical) {
+    top = Math.ceil(Math.random() * (11 - numTiles));
+    left = Math.ceil(Math.random() * 10);
+  } else {
+    top =  Math.ceil(Math.random() * 10);
+    left = Math.ceil(Math.random() * (11 - numTiles));
+  }
+
+  if (!checkCompCoords(top, left, vertical, fleet[0])) {
+    placeCompShips(fleet);
+  } else {
+    placeCompShips(fleet.slice(1));
+  }
+}
+
+function checkHit(coord, fleet) {
+
+  for (let ship in fleet) {
+    let coords = fleet[ship]["coords"];
+    let index = coords.indexOf(coord);
+
+    if (index > -1) {
+      fleet[ship]["coords"].splice(index, 1);
+      console.log(fleet[ship]["coords"]);
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function userTurn() {
+  $("#instructionBox").text("Your turn! Click any blue square on your opponent's grid to fire!");
+
+  $(".coord").click(function() {
+    if ($(this).css("background") === "#FF0000" || $(this).css("background") === "#FFFFFF") {
+      $("#instructionBox").text("You've already fired here! Click any blue square on your opponent's grid.");
+    } else {
+      let y = Math.round(parseInt($(this).css("marginTop")) / 60);
+      let x = Math.round(parseInt($(this).css("marginLeft")) / 60);
+      let coord = `${x},${y}`;
+      console.log(checkHit(coord, compFleet));
+    }
+  })
+}
+
 function playBattleship() {
 
-  var userGrid = $("#userGrid")[0];
-  var compGrid = $("#compGrid")[0];
+  let userGrid = $("#userGrid")[0];
+  let compGrid = $("#compGrid")[0];
 
   fillGrid(userGrid);
   fillGrid(compGrid);
 
   placeShips(fleet, userGrid);
+  placeCompShips(compFleet);
+  console.log(compFleet);
 
 }
 
