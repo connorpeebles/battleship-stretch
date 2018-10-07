@@ -269,10 +269,12 @@ function checkCompHit(coord, fleet) {
         $("#instructionBox").text(`Your opponent fired! It was a hit!`);
       }
 
+      return true;
     }
   }
 
   $("#instructionBox").text(`Your opponent fired! It was a miss!`);
+  return false;
 }
 
 function userTurn() {
@@ -295,11 +297,13 @@ function userTurn() {
       }
 
       compTurn();
+      return;
 
     } else {
       $(this).css({background: "#FFFFFF"});
       guesses.push(coord);
       compTurn();
+      return;
     }
   })
 }
@@ -312,8 +316,7 @@ function compGuess() {
   if (compGuesses.includes(coord)) {
     compGuess();
   } else {
-    let hit = console.log(coord);
-    checkCompHit(coord, fleet);
+    let hit = checkCompHit(coord, fleet);
     compGuesses.push(coord);
     let guess = $("<div>").addClass("compGuess");
     $(guess).css({marginLeft: (60*x)+"px", marginTop: (60*y)+"px"});
