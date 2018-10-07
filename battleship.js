@@ -228,16 +228,27 @@ function placeCompShips(fleet) {
 
 function checkHit(coord, fleet) {
 
-  for (let ship in fleet) {
-    let coords = fleet[ship]["coords"];
-    let index = coords.indexOf(coord);
+  for (let ship of fleet) {
+    let index = ship.coords.indexOf(coord);
 
     if (index > -1) {
-      fleet[ship]["coords"].splice(index, 1);
+      ship.coords.splice(index, 1);
+
+      if (ship.coords.length === 0) {
+        let shipName = ship.name;
+        index = fleet.indexOf(ship);
+        fleet.splice(index,1);
+        $("#instructionBox").text(`Hit! You sunk your opponent's ${shipName}!`);
+      } else {
+        $("#instructionBox").text(`Hit!`);
+
+      }
+
       return true;
     }
   }
 
+  $("#instructionBox").text(`Miss!`);
   return false;
 }
 
@@ -258,6 +269,7 @@ function userTurn() {
     }
 
     guesses.push(coord);
+    console.log(compFleet);
   })
 }
 
