@@ -67,8 +67,6 @@ function checkCoords(top, left, vertical, ship) {
   let numCoords = ship.numCoords;
   let shipCoords = [];
 
-  console.log("Coords (beginning): ", coords);
-
   while (numCoords > 0) {
     let coord = `${left},${top}`;
 
@@ -91,10 +89,6 @@ function checkCoords(top, left, vertical, ship) {
 
   ship.coords = shipCoords;
   coords = coords.concat(shipCoords);
-
-  console.log("shipCoords (end): ", shipCoords);
-  console.log("Coords (end): ", coords);
-
   return true;
 }
 
@@ -147,52 +141,18 @@ function placeShips(fleet, grid) {
         placeShips(fleet.slice(1), grid);
       }
     }
-    // var Top = Math.round(parseInt($("#"+shipName).css("top")) / 60);
-    // var Left = Math.round(parseInt($("#"+shipName).css("left")) / 60);
-
-    // if (Top === 0 || Left === 0 || vertical && Top > (11 - numTiles) || !vertical && Left > (11 - numTiles)) {
-    //   $("#instructionBox").text("Please place your " + shipName + " within the confines of the grid (on the blue squares).");
-
-    // }
-    // else {
-    //   for (var i = 0; i < numTiles; i++) {
-    //     if (vertical) {
-    //       fleet[index].coords.push([Left, Top + i]);
-    //     } else {
-    //       fleet[index].coords.push([Left + i, Top]);
-    //     }
-    //   }
-    //   return null;
-  // }
   });
-// }
 }
 
 function playBattleship() {
 
   var userGrid = $("#userGrid")[0];
+  var compGrid = $("#compGrid")[0];
 
   fillGrid(userGrid);
-
-  // var carrier = $("<div>").attr("id", "carrier");
-  // var battleship = $("<div>").attr("id", "battleship");
-  // var cruiser = $("<div>").attr("id", "cruiser");
-  // var submarine = $("<div>").attr("id", "submarine");
-  // var destroyer = $("<div>").attr("id", "destroyer");
-
-  // fleet[0].jq = carrier;
-  // fleet[1].jq = battleship;
-  // fleet[2].jq = cruiser;
-  // fleet[3].jq = submarine;
-  // fleet[4].jq = destroyer;
+  fillGrid(compGrid);
 
   placeShips(fleet, userGrid);
-
-  // placeShips(fleet[1].name, fleet[1].numCoords, 1, userGrid);
-
-  // var timeoutID = setTimeout(function() {
-  //   placeShips(fleet[1].name, fleet[1].numCoords, 1, userGrid);
-  // }, 1000*10);
 
 }
 

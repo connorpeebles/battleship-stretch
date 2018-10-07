@@ -17,6 +17,16 @@
   background: #778899;
 }
 
+#compGrid{
+  position: absolute;
+  top: 0;
+  margin-top: 59px;
+  margin-left: 779px;
+  width: 660px;
+  height: 660px;
+  background: #778899;
+}
+
 .coord{
   position: absolute;
   width: 58px;
@@ -107,4 +117,24 @@
   width: 1380px;
   height: 200px;
   font-size: 18pt;
+}
+
+#userTitle{
+  position: absolute;
+  top: 20px;
+  margin-left: 59px;
+  width: 660px;
+  text-align: center;
+  font-size: 18pt;
+  font-weight: bold;
+}
+
+#compTitle{
+  position: absolute;
+  top: 20px;
+  margin-left: 779px;
+  width: 660px;
+  text-align: center;
+  font-size: 18pt;
+  font-weight: bold;
 }
