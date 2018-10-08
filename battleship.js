@@ -245,6 +245,12 @@ function checkUserHit(x, y, coord, fleet) {
 }
 
 function userTurn() {
+
+  if (userFleet.length === 0) {
+    $("#instructionBox").text("Oh no! You lost! :(");
+    return;
+  }
+
   $("#instructionBox").text("Your turn! Click any blue square on your opponent's grid to fire!");
 
   $(".compCoord").click(function() {
