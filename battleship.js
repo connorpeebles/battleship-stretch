@@ -428,4 +428,8 @@ function playBattleship() {
 
   placeUserShips(userFleet, userGrid);
   placeCompShips(compFleet);
+
+  $('#newGame').click(function() {
+    location.reload();
+  });
 }
