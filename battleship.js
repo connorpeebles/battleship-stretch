@@ -1,4 +1,4 @@
-const fleet = [
+const userFleet = [
   {
     name: "carrier",
     numCoords: 5,
@@ -59,20 +59,23 @@ const compFleet = [
   }
 ];
 
-let coords = [];
-let compCoords = [];
+const coords = {
+  userCoords: [],
+  compCoords: []
+}
+
 let guesses = [];
 let compGuesses = [];
 let compCurGuess = [];
 
-function fillGrid(grid) {
+function fillGrid(grid, coordClass) {
 
-  let refCoord = $("<div>").addClass("ref");
+  let refCoord = $("<div>").addClass("refCoord");
   $(grid).append(refCoord);
 
   for (let i = 1; i <= 10; i++) {
 
-    refCoord = $("<div>").addClass("ref");
+    refCoord = $("<div>").addClass("refCoord");
     $(refCoord).css({marginLeft: (60*i)+"px"});
     $(refCoord).text(String.fromCharCode(64 + i));
     $(grid).append(refCoord);
@@ -80,14 +83,14 @@ function fillGrid(grid) {
 
   for (let i = 1; i <= 10; i++) {
 
-    refCoord = $("<div>").addClass("ref");
+    refCoord = $("<div>").addClass("refCoord");
     $(refCoord).css({marginTop: (60*i)+"px"});
     $(refCoord).text(i);
     $(grid).append(refCoord);
 
     for (let j = 1; j <= 10; j++) {
 
-      let coord = $("<div>").addClass("coord");
+      let coord = $("<div>").addClass(coordClass);
       $(coord).css({marginTop: (60*i)+"px", marginLeft: (60*j)+"px"});
       $(grid).append(coord);
     }
@@ -95,14 +98,14 @@ function fillGrid(grid) {
 
 }
 
-function checkCoords(top, left, vertical, ship) {
+function checkCoords(top, left, vertical, ship, coordList) {
   let numCoords = ship.numCoords;
   let shipCoords = [];
 
   while (numCoords > 0) {
     let coord = `${left},${top}`;
 
-    if (coords.includes(coord)) {
+    if (coords[coordList].includes(coord)) {
       return false;
     } else {
       shipCoords.push(coord);
@@ -118,34 +121,7 @@ function checkCoords(top, left, vertical, ship) {
   }
 
   ship.coords = shipCoords;
-  coords = coords.concat(shipCoords);
-  return true;
-}
-
-function checkCompCoords(top, left, vertical, ship) {
-  let numCoords = ship.numCoords;
-  let shipCoords = [];
-
-  while (numCoords > 0) {
-    let coord = `${left},${top}`;
-
-    if (compCoords.includes(coord)) {
-      return false;
-    } else {
-      shipCoords.push(coord);
-
-      if (vertical) {
-        top++;
-      } else {
-        left++;
-      }
-
-      numCoords--;
-    }
-  }
-
-  ship.coords = shipCoords;
-  compCoords = compCoords.concat(shipCoords);
+  coords[coordList] = coords[coordList].concat(shipCoords);
   return true;
 }
 
@@ -192,7 +168,7 @@ function placeShips(fleet, grid) {
 
       if (Top === 0 || Left === 0) {
         $("#instructionBox").text("Please place your ship in the water (blue squares)!");
-      } else if (!checkCoords(Top, Left, vertical, fleet[0])) {
+      } else if (!checkCoords(Top, Left, vertical, fleet[0], "userCoords")) {
         $("#instructionBox").text("Please don't place your ships on top of each other!");
       } else {
         $("#"+shipName).off();
@@ -221,7 +197,7 @@ function placeCompShips(fleet) {
     left = Math.ceil(Math.random() * (11 - numTiles));
   }
 
-  if (!checkCompCoords(top, left, vertical, fleet[0])) {
+  if (!checkCoords(top, left, vertical, fleet[0], "compCoords")) {
     placeCompShips(fleet);
   } else {
     placeCompShips(fleet.slice(1));
@@ -283,7 +259,7 @@ function checkCompHit(coord, fleet) {
 function userTurn() {
   $("#instructionBox").text("Your turn! Click any blue square on your opponent's grid to fire!");
 
-  $(".coord").click(function() {
+  $(".compCoord").click(function() {
     let y = Math.round(parseInt($(this).css("marginTop")) / 60);
     let x = Math.round(parseInt($(this).css("marginLeft")) / 60);
     let coord = `${x},${y}`;
@@ -396,7 +372,7 @@ function compGuess() {
   if (compGuesses.includes(coord) || x < 1 || x > 10 || y < 1 || y > 10) {
     compGuess();
   } else {
-    let hit = checkCompHit(coord, fleet);
+    let hit = checkCompHit(coord, userFleet);
     compGuesses.push(coord);
 
     let guess = $("<div>").addClass("compGuess");
@@ -421,10 +397,10 @@ function playBattleship() {
   let userGrid = $("#userGrid")[0];
   let compGrid = $("#compGrid")[0];
 
-  fillGrid(userGrid);
-  fillGrid(compGrid);
+  fillGrid(userGrid, "userCoord");
+  fillGrid(compGrid, "compCoord");
 
-  placeShips(fleet, userGrid);
+  placeShips(userFleet, userGrid);
   placeCompShips(compFleet);
   console.log(compFleet);
 

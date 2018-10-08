@@ -1,0 +1,21 @@
+{
+  "name": "battleship-stretch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "battleship.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/connorpeebles/battleship-stretch.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/connorpeebles/battleship-stretch/issues"
+  },
+  "homepage": "https://github.com/connorpeebles/battleship-stretch#readme",
+  "dependencies": {}
+}
