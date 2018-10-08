@@ -63,6 +63,7 @@ let coords = [];
 let compCoords = [];
 let guesses = [];
 let compGuesses = [];
+let compCurGuess = [];
 
 function fillGrid(grid) {
 
@@ -264,8 +265,10 @@ function checkCompHit(coord, fleet) {
         let shipName = ship.name;
         index = fleet.indexOf(ship);
         fleet.splice(index,1);
+        compCurGuess = [];
         $("#instructionBox").text(`Your opponent fired and sunk your ${shipName}!`);
       } else {
+        compCurGuess.push(coord);
         $("#instructionBox").text(`Your opponent fired! It was a hit!`);
       }
 
@@ -288,6 +291,7 @@ function userTurn() {
     if (guesses.includes(coord)) {
       $("#instructionBox").text("You've already fired here! Click any blue square on your opponent's grid.");
     } else if (checkHit(coord, compFleet)) {
+      $(".coord").off();
       $(this).css({background: "#FF0000"});
       guesses.push(coord);
 
@@ -300,6 +304,7 @@ function userTurn() {
       return;
 
     } else {
+      $(".coord").off();
       $(this).css({background: "#FFFFFF"});
       guesses.push(coord);
       compTurn();
@@ -309,15 +314,89 @@ function userTurn() {
 }
 
 function compGuess() {
-  let x =  Math.ceil(Math.random() * 10);
-  let y =  Math.ceil(Math.random() * 10);
-  let coord = `${x},${y}`;
+  let x;
+  let y;
+  let coord;
 
-  if (compGuesses.includes(coord)) {
+  if (compCurGuess.length === 1) {
+    let curCoords = compCurGuess[0].split(",");
+    let curX = Number(curCoords[0]);
+    let curY = Number(curCoords[1]);
+    let rand = Math.floor(Math.random() * 4);
+    console.log("curX: ", curX, ", curY: ", curY);
+
+    if (rand === 0) {
+      x = curX;
+      y = curY - 1;
+    } else if (rand === 1) {
+      x = curX;
+      y = curY + 1;
+    } else if (rand === 2) {
+      x = curX - 1;
+      y = curY;
+    } else {
+      x = curX + 1;
+      y = curY;
+    }
+
+    coord = `${x},${y}`;
+    console.log("coord: ", coord);
+
+  } else if (compCurGuess.length > 1) {
+    let curCoords = compCurGuess[0].split(",");
+    let curX = Number(curCoords[0]);
+    let curY = Number(curCoords[1]);
+    let curCoords2 = compCurGuess[compCurGuess.length - 1].split(",");
+    let curX2 = Number(curCoords2[0]);
+    let curY2 = Number(curCoords2[1]);
+
+    if (curX === curX2) {
+      x = curX;
+      maxY = Math.max(curY, curY2);
+      minY = Math.min(curY, curY2);
+      y = maxY + 1;
+      coord = `${x},${y}`;
+
+      if (maxY > 10 || compGuesses.includes(coord)) {
+        y = minY - 1;
+        coord = `${x},${y}`;
+
+        if (minY < 1 || compGuesses.includes(coord)) {
+          compCurGuess = [];
+          compGuess();
+        }
+      }
+
+    } else {
+      y = curY;
+      maxX = Math.max(curX, curX2);
+      minX = Math.min(curX, curX2);
+      x = maxX + 1;
+      coord = `${x},${y}`;
+
+      if (maxX > 10 || compGuesses.includes(coord)) {
+        x = minX - 1;
+        coord = `${x},${y}`;
+
+        if (minX < 1 || compGuesses.includes(coord)) {
+          compCurGuess = [];
+          compGuess();
+        }
+      }
+    }
+
+  } else {
+    x =  Math.ceil(Math.random() * 10);
+    y =  Math.ceil(Math.random() * 10);
+    coord = `${x},${y}`;
+  }
+
+  if (compGuesses.includes(coord) || x < 1 || x > 10 || y < 1 || y > 10) {
     compGuess();
   } else {
     let hit = checkCompHit(coord, fleet);
     compGuesses.push(coord);
+
     let guess = $("<div>").addClass("compGuess");
     $(guess).css({marginLeft: (60*x)+"px", marginTop: (60*y)+"px"});
     $(guess).text("x");
@@ -327,17 +406,12 @@ function compGuess() {
     }
 
     $("#userGrid").append(guess);
-
-    if (fleet.length === 0) {
-      $("#instructionBox").text("You lose :(");
-      return;
-    }
   }
 }
 
 function compTurn() {
-  setTimeout(compGuess, 3000);
-  setTimeout(userTurn, 3000);
+  setTimeout(compGuess, 2000);
+  setTimeout(userTurn, 4000);
 }
 
 function playBattleship() {
