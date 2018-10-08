@@ -98,6 +98,18 @@ function fillGrid(grid, coordClass) {
 
 }
 
+function remainingShips(fleet) {
+  let output = "";
+
+  for (let ship of fleet) {
+    let name = ship.name;
+    let size = ship.numCoords;
+    output = output + name + " (" + size + " squares), "
+  }
+
+  return output.substring(0, output.length - 2);
+}
+
 function checkCoords(top, left, vertical, ship, coordList) {
   let numCoords = ship.numCoords;
   let shipCoords = [];
@@ -125,7 +137,7 @@ function checkCoords(top, left, vertical, ship, coordList) {
   return true;
 }
 
-function placeShips(fleet, grid) {
+function placeUserShips(fleet, grid) {
 
   if (fleet.length === 0) {
     userTurn();
@@ -162,7 +174,7 @@ function placeShips(fleet, grid) {
 
   $(document).keypress(function(e) {
 
-    if(e.which === 13) {
+    if (e.which === 13) {
       let Top = Math.round(parseInt($(ship).css("top")) / 60);
       let Left = Math.round(parseInt($(ship).css("left")) / 60);
 
@@ -172,7 +184,7 @@ function placeShips(fleet, grid) {
         $("#instructionBox").text("Please don't place your ships on top of each other!");
       } else {
         $("#"+shipName).off();
-        placeShips(fleet.slice(1), grid);
+        placeUserShips(fleet.slice(1), grid);
       }
     }
   });
@@ -204,7 +216,8 @@ function placeCompShips(fleet) {
   }
 }
 
-function checkHit(coord, fleet) {
+function checkUserHit(x, y, coord, fleet) {
+  let letter = String.fromCharCode(64 + x);
 
   for (let ship of fleet) {
     let index = ship.coords.indexOf(coord);
@@ -216,43 +229,18 @@ function checkHit(coord, fleet) {
         let shipName = ship.name;
         index = fleet.indexOf(ship);
         fleet.splice(index,1);
-        $("#instructionBox").text(`Hit! You sunk your opponent's ${shipName}!`);
+        $("#instructionBox").text(`${letter}${y}: Hit! You sunk your opponent's ${shipName}!`);
+        let compShips = remainingShips(compFleet);
+        $("#shipsComp").text("Ships remaining: " + compShips);
       } else {
-        $("#instructionBox").text(`Hit!`);
+        $("#instructionBox").text(`${letter}${y}: Hit!`);
       }
 
       return true;
     }
   }
 
-  $("#instructionBox").text(`Miss!`);
-  return false;
-}
-
-function checkCompHit(coord, fleet) {
-
-  for (let ship of fleet) {
-    let index = ship.coords.indexOf(coord);
-
-    if (index > -1) {
-      ship.coords.splice(index, 1);
-
-      if (ship.coords.length === 0) {
-        let shipName = ship.name;
-        index = fleet.indexOf(ship);
-        fleet.splice(index,1);
-        compCurGuess = [];
-        $("#instructionBox").text(`Your opponent fired and sunk your ${shipName}!`);
-      } else {
-        compCurGuess.push(coord);
-        $("#instructionBox").text(`Your opponent fired! It was a hit!`);
-      }
-
-      return true;
-    }
-  }
-
-  $("#instructionBox").text(`Your opponent fired! It was a miss!`);
+  $("#instructionBox").text(`${letter}${y}: Miss!`);
   return false;
 }
 
@@ -263,11 +251,13 @@ function userTurn() {
     let y = Math.round(parseInt($(this).css("marginTop")) / 60);
     let x = Math.round(parseInt($(this).css("marginLeft")) / 60);
     let coord = `${x},${y}`;
+    console.log(guesses);
 
     if (guesses.includes(coord)) {
       $("#instructionBox").text("You've already fired here! Click any blue square on your opponent's grid.");
-    } else if (checkHit(coord, compFleet)) {
-      $(".coord").off();
+
+    } else if (checkUserHit(x, y, coord, compFleet)) {
+      $(".compCoord").off();
       $(this).css({background: "#FF0000"});
       guesses.push(coord);
 
@@ -280,13 +270,43 @@ function userTurn() {
       return;
 
     } else {
-      $(".coord").off();
+      $(".compCoord").off();
       $(this).css({background: "#FFFFFF"});
       guesses.push(coord);
       compTurn();
       return;
     }
   })
+}
+
+function checkCompHit(x, y, coord, fleet) {
+  let letter = String.fromCharCode(64 + x);
+
+  for (let ship of fleet) {
+    let index = ship.coords.indexOf(coord);
+
+    if (index > -1) {
+      ship.coords.splice(index, 1);
+
+      if (ship.coords.length === 0) {
+        let shipName = ship.name;
+        index = fleet.indexOf(ship);
+        fleet.splice(index,1);
+        compCurGuess = [];
+        $("#instructionBox").text(`${letter}${y}: Hit! Your opponent sunk your ${shipName}!`);
+        let userShips = remainingShips(userFleet);
+        $("#shipsUser").text("Ships remaining: " + userShips);
+      } else {
+        compCurGuess.push(coord);
+        $("#instructionBox").text(`Your opponent fired. ${letter}${y}: Hit!`);
+      }
+
+      return true;
+    }
+  }
+
+  $("#instructionBox").text(`Your opponent fired. ${letter}${y}: Miss!`);
+  return false;
 }
 
 function compGuess() {
@@ -372,7 +392,7 @@ function compGuess() {
   if (compGuesses.includes(coord) || x < 1 || x > 10 || y < 1 || y > 10) {
     compGuess();
   } else {
-    let hit = checkCompHit(coord, userFleet);
+    let hit = checkCompHit(x, y, coord, userFleet);
     compGuesses.push(coord);
 
     let guess = $("<div>").addClass("compGuess");
@@ -389,7 +409,7 @@ function compGuess() {
 
 function compTurn() {
   setTimeout(compGuess, 2000);
-  setTimeout(userTurn, 4000);
+  setTimeout(userTurn, 5000);
 }
 
 function playBattleship() {
@@ -397,17 +417,15 @@ function playBattleship() {
   let userGrid = $("#userGrid")[0];
   let compGrid = $("#compGrid")[0];
 
+  let userShips = remainingShips(userFleet);
+  $("#shipsUser").text("Ships remaining: " + userShips);
+
+  let compShips = remainingShips(compFleet);
+  $("#shipsComp").text("Ships remaining: " + compShips);
+
   fillGrid(userGrid, "userCoord");
   fillGrid(compGrid, "compCoord");
 
-  placeShips(userFleet, userGrid);
+  placeUserShips(userFleet, userGrid);
   placeCompShips(compFleet);
-  console.log(compFleet);
-
 }
-
-// function click(grid) {
-//   $(".coord").click(function(){
-//     $(this).css({background: "#FF0000"});
-//   });
-// }
