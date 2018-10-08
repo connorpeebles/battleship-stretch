@@ -357,13 +357,14 @@ function compGuess() {
       y = maxY + 1;
       coord = `${x},${y}`;
 
-      if (maxY > 10 || compGuesses.includes(coord)) {
+      if (y > 10 || compGuesses.includes(coord)) {
         y = minY - 1;
         coord = `${x},${y}`;
 
-        if (minY < 1 || compGuesses.includes(coord)) {
+        if (y < 1 || compGuesses.includes(coord)) {
           compCurGuess = [];
           compGuess();
+          return;
         }
       }
 
@@ -374,13 +375,14 @@ function compGuess() {
       x = maxX + 1;
       coord = `${x},${y}`;
 
-      if (maxX > 10 || compGuesses.includes(coord)) {
+      if (x > 10 || compGuesses.includes(coord)) {
         x = minX - 1;
         coord = `${x},${y}`;
 
-        if (minX < 1 || compGuesses.includes(coord)) {
+        if (x < 1 || compGuesses.includes(coord)) {
           compCurGuess = [];
           compGuess();
+          return;
         }
       }
     }
