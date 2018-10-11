@@ -17,5 +17,9 @@
     "url": "https://github.com/connorpeebles/battleship-stretch/issues"
   },
   "homepage": "https://github.com/connorpeebles/battleship-stretch#readme",
-  "dependencies": {}
+  "dependencies": {
+    "browserify-fs": "^1.0.0",
+    "express": "^4.16.3",
+    "nodemon": "^1.18.4"
+  }
 }
