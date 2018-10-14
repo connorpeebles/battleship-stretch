@@ -1,3 +1,5 @@
+"use strict";
+
 // **DATA**
 
 // array representing the user's ships
@@ -270,7 +272,10 @@ function placeCompShips(fleet) {
   }
 }
 
-//function checkUserHit(x, y, coord, fleet) {
+// checkUserHit takes in an array of ships "fleet" and an array of length two "coordArr", where:
+//   coordArr[0] is an integer representing the x-coordinate of the user's guess
+//   coordArr[1] is an integer representing the y-coordinate of the user's guess
+// and returns true if the user guesses a coordinate in fleet (hit), else false (miss)
 function checkUserHit(coordArr, fleet) {
   let x = coordArr[0];
   let y = coordArr[1];
@@ -278,12 +283,15 @@ function checkUserHit(coordArr, fleet) {
 
   let letter = String.fromCharCode(64 + x);
 
+  // checks the coordinate against each ship in fleet
   for (let ship of fleet) {
     let index = ship.coords.indexOf(coord);
 
+    // if the coordinate is in the ships in fleet, return true (hit)
     if (index > -1) {
       ship.coords.splice(index, 1);
 
+      // if the coordinate is the final coordinate in ship, remove the ship from fleet (ship is sunk)
       if (ship.coords.length === 0) {
         let shipName = ship.name;
         index = fleet.indexOf(ship);
@@ -299,6 +307,7 @@ function checkUserHit(coordArr, fleet) {
     }
   }
 
+  // if the coordinate is not in the ships in fleet, return false (miss)
   $("#instructionBox").text(`${letter}${y}: Miss!`);
   return false;
 }
@@ -354,15 +363,27 @@ function userTurn() {
   });
 }
 
-function checkCompHit(x, y, coord, fleet) {
+// checkCompHit takes in an array of ships "fleet" and an array of length two "coordArr", where:
+//   coordArr[0] is an integer representing the x-coordinate of the computer's guess
+//   coordArr[1] is an integer representing the y-coordinate of the computer's guess
+// and returns true if the computer guesses a coordinate in fleet (hit), else false (miss)
+function checkCompHit(coordArr, fleet) {
+  let x = coordArr[0];
+  let y = coordArr[1];
+  let coord = `${x},${y}`;
+
   let letter = String.fromCharCode(64 + x);
 
+  // checks the coordinate against each ship in fleet
   for (let ship of fleet) {
     let index = ship.coords.indexOf(coord);
 
+    // if the coordinate is in the ships in fleet, return true (hit) and add the guess to compCurGuess array
     if (index > -1) {
       ship.coords.splice(index, 1);
 
+      // if the coordinate is the final coordinate in ship, remove the ship from fleet (ship is sunk)
+      // and empty compCurGuess array
       if (ship.coords.length === 0) {
         let shipName = ship.name;
         index = fleet.indexOf(ship);
@@ -380,21 +401,24 @@ function checkCompHit(x, y, coord, fleet) {
     }
   }
 
+  // if the coordinate is not in the ships in fleet, return false (miss)
   $("#instructionBox").text(`Your opponent fired. ${letter}${y}: Miss!`);
   return false;
 }
 
+// compGuess strategically guesses a coordinate on the user's grid
 function compGuess() {
   let x;
   let y;
   let coord;
 
+  // if the computer currently has one hit for a specific ship, it's next guess will be one coordinate
+  // below, above, to the left, or to the right of said coordinate
   if (compCurGuess.length === 1) {
     let curCoords = compCurGuess[0].split(",");
     let curX = Number(curCoords[0]);
     let curY = Number(curCoords[1]);
     let rand = Math.floor(Math.random() * 4);
-    console.log("curX: ", curX, ", curY: ", curY);
 
     if (rand === 0) {
       x = curX;
@@ -411,8 +435,9 @@ function compGuess() {
     }
 
     coord = `${x},${y}`;
-    console.log("coord: ", coord);
 
+  // if the computer currently has more than one hit for a specific ship, it's next guess will be
+  // in the same direction that its guesses indicates (vertical or horizontal)
   } else if (compCurGuess.length > 1) {
     let curCoords = compCurGuess[0].split(",");
     let curX = Number(curCoords[0]);
@@ -421,17 +446,26 @@ function compGuess() {
     let curX2 = Number(curCoords2[0]);
     let curY2 = Number(curCoords2[1]);
 
+    // if the x-coordinates of the two guesses in compCurGuess are the same, the computer's next
+    // guess will have the same x-coordinate, and have a y-coordinate of one greater than the
+    // current maximum y-coordinate in compCurGuesses
     if (curX === curX2) {
       x = curX;
-      maxY = Math.max(curY, curY2);
-      minY = Math.min(curY, curY2);
+      let maxY = Math.max(curY, curY2);
+      let minY = Math.min(curY, curY2);
       y = maxY + 1;
       coord = `${x},${y}`;
 
+      // if that y-coordinate is greater than 10 or the computer has already guessed that set of
+      // coordinates, then the computer updates its guess to have the same x-coordinate, and have a
+      // y-coordinate of one less than the current minimum y-coordinate in compCurGuesses
       if (y > 10 || compGuesses.includes(coord)) {
         y = minY - 1;
         coord = `${x},${y}`;
 
+        // if that y-coordinate is less than 1 or the computer has already guessed that set of
+        // coordinates, then the computer forgets about the current ship it is trying to sink and
+        // returns to randomly guessing coordinates
         if (y < 1 || compGuesses.includes(coord)) {
           compCurGuess = [];
           compGuess();
@@ -439,17 +473,26 @@ function compGuess() {
         }
       }
 
+    // if the y-coordinates of the two guesses in compCurGuess are the same, the computer's next
+    // guess will have the same y-coordinate, and have an x-coordinate of one greater than the
+    // current maximum x-coordinate in compCurGuesses
     } else {
       y = curY;
-      maxX = Math.max(curX, curX2);
-      minX = Math.min(curX, curX2);
+      let maxX = Math.max(curX, curX2);
+      let minX = Math.min(curX, curX2);
       x = maxX + 1;
       coord = `${x},${y}`;
 
+      // if that x-coordinate is greater than 10 or the computer has already guessed that set of
+      // coordinates, then the computer updates its guess to have the same y-coordinate, and have an
+      // x-coordinate of one less than the current minimum x-coordinate in compCurGuesses
       if (x > 10 || compGuesses.includes(coord)) {
         x = minX - 1;
         coord = `${x},${y}`;
 
+        // if that x-coordinate is less than 1 or the computer has already guessed that set of
+        // coordinates, then the computer forgets about the current ship it is trying to sink and
+        // returns to randomly guessing coordinates
         if (x < 1 || compGuesses.includes(coord)) {
           compCurGuess = [];
           compGuess();
@@ -458,15 +501,21 @@ function compGuess() {
       }
     }
 
+  // if the computer has no current hits, it will guess a set of coordinates randomly
   } else {
     x =  Math.ceil(Math.random() * 10);
     y =  Math.ceil(Math.random() * 10);
     coord = `${x},${y}`;
   }
 
+  // if the computer guesses a set of coordinates it has already guessed or an impossible guess,
+  // it guesses again
   if (compGuesses.includes(coord) || x < 1 || x > 10 || y < 1 || y > 10) {
     compGuess();
+
+  // if the computer's guess is valid, the guess is displayed on the user's grid
   } else {
+    // checks whether the guess was a hit (true) or a miss (false)
     let hit = checkCompHit(x, y, coord, userFleet);
     compGuesses.push(coord);
 
@@ -482,7 +531,10 @@ function compGuess() {
   }
 }
 
+// compTurn is the main functioncall for when it is the computer's turn to guess
 function compTurn() {
+
+  // function calls are delayed to simulate thinking and also allow time to display messages
   setTimeout(compGuess, 2000);
   setTimeout(userTurn, 4500);
 }
