@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+  <head>
+    <title>Battleship</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Oswald:300|Rock+Salt" rel="stylesheet">
+  </head>
+
+  <body>
+    <div id="title">Battleship</div>
+    <div id="userTitle">Your Grid</div>
+    <div id="userGrid"></div>
+    <div id="compTitle">Opponent's Grid</div>
+    <div id="compGrid"></div>
+    <div id="shipsUser"></div>
+    <div id="shipsComp"></div>
+    <div id="leaderboard">
+        <b style="font-size:18pt">Leaderboard</b>
+        <% for (let user of userWins) { %>
+        <% let wins = "wins"; %>
+        <% if (user[1] == 1) wins = "win"; %>
+
+        <p><b><%= user[0] %>:</b> &nbsp; <%= user[1] %> <%= wins %></p>
+
+        <% }; %>
+    </div>
+    <div id="instructionBox"></div>
+    <div>
+    <button type="button" id="newGame">New Game</button>
+    <form method="POST" action="/" id="enterName">
+        <label for="name">Enter your name: </label>
+        <input type="text" name="name">
+        <input type="submit" value="Submit">
+    </form>
+    <script src="/scripts/main.js"></script>
+    <script>playBattleship();</script>
+  </body>
+
+</html>

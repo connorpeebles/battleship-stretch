@@ -173,6 +173,20 @@
   border: 1px solid #000000;
 }
 
+#leaderboard{
+  position: absolute;
+  top: 60px;
+  margin-left: 1510px;
+  width: 250px;
+  height: 320px;
+  overflow-y: auto;
+  font-family: 'Oswald', sans-serif;
+  font-size: 16pt;
+  background: #C0C0C0;
+  border: 1px solid #000000;
+  padding: 5px;
+}
+
 #instructionBox{
   margin-top: 120px;
   margin-left: 119px;
@@ -186,4 +200,13 @@
   margin-left: 119px;
   font-size: 16pt;
   font-family: 'Oswald', sans-serif;
+}
+
+#enterName{
+  position: absolute;
+  margin-left: 119px;
+  top: 895px;
+  font-size: 18pt;
+  font-family: 'Oswald', sans-serif;
+  visibility: hidden;
 }
