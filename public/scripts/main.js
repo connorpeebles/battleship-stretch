@@ -418,23 +418,28 @@ function compGuess() {
     let curCoords = compCurGuess[0].split(",");
     let curX = Number(curCoords[0]);
     let curY = Number(curCoords[1]);
-    let rand = Math.floor(Math.random() * 4);
+    let rand = Math.floor(Math.random() * 2);
 
     if (rand === 0) {
       x = curX;
-      y = curY - 1;
-    } else if (rand === 1) {
-      x = curX;
       y = curY + 1;
-    } else if (rand === 2) {
-      x = curX - 1;
-      y = curY;
+      coord = `${x},${y}`;
+
+      if (y > 10 || compGuesses.includes(coord)) {
+        y = curY - 1;
+        coord = `${x},${y}`;
+      }
+
     } else {
       x = curX + 1;
       y = curY;
-    }
+      coord = `${x},${y}`;
 
-    coord = `${x},${y}`;
+      if (x > 10 || compGuesses.includes(coord)) {
+        x = curX - 1;
+        coord = `${x},${y}`;
+      }
+    }
 
   // if the computer currently has more than one hit for a specific ship, it's next guess will be
   // in the same direction that its guesses indicates (vertical or horizontal)
@@ -516,7 +521,7 @@ function compGuess() {
   // if the computer's guess is valid, the guess is displayed on the user's grid
   } else {
     // checks whether the guess was a hit (true) or a miss (false)
-    let hit = checkCompHit(x, y, coord, userFleet);
+    let hit = checkCompHit([x, y], userFleet);
     compGuesses.push(coord);
 
     let guess = $("<div>").addClass("compGuess");
