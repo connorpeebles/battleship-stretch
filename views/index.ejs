@@ -30,7 +30,9 @@
     </div>
     <div id="instructionBox"></div>
     <div>
-    <button type="button" id="newGame">New Game</button>
+    <form method="GET" action="/">
+        <button type="submit" id="newGame">New Game</button>
+    </form>
     <form method="POST" action="/" id="enterName">
         <label for="name">Enter your name: </label>
         <input type="text" name="name">
