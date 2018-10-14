@@ -99,13 +99,13 @@ function remainingShips(fleet) {
 // of coordinates "coordclass"(userCoord or compCoord) that will occupy the grid
 function fillGrid(grid, coordClass) {
 
-  let refCoord = $("<div>").addClass("refCoord");
+  let refCoord = $("<div>").addClass("coord").addClass("refCoord");
   $(grid).append(refCoord);
 
   // appends the letter reference coordinates (A - J) to the top of "grid"
   for (let i = 1; i <= 10; i++) {
 
-    refCoord = $("<div>").addClass("refCoord");
+    refCoord = $("<div>").addClass("coord").addClass("refCoord");
     $(refCoord).css({marginLeft: (60*i)+"px"});
     $(refCoord).text(String.fromCharCode(64 + i));
     $(grid).append(refCoord);
@@ -114,7 +114,7 @@ function fillGrid(grid, coordClass) {
   // appends the numeric reference coordinates (1 - 10) to the left of "grid"
   for (let i = 1; i <= 10; i++) {
 
-    refCoord = $("<div>").addClass("refCoord");
+    refCoord = $("<div>").addClass("coord").addClass("refCoord");
     $(refCoord).css({marginTop: (60*i)+"px"});
     $(refCoord).text(i);
     $(grid).append(refCoord);
@@ -122,7 +122,7 @@ function fillGrid(grid, coordClass) {
     // appends the coordinates of class "coordClass" to the main area of "grid"
     for (let j = 1; j <= 10; j++) {
 
-      let coord = $("<div>").addClass(coordClass);
+      let coord = $("<div>").addClass("coord").addClass(coordClass);
       $(coord).css({marginTop: (60*i)+"px", marginLeft: (60*j)+"px"});
       $(grid).append(coord);
     }
@@ -524,7 +524,7 @@ function compGuess() {
     let hit = checkCompHit([x, y], userFleet);
     compGuesses.push(coord);
 
-    let guess = $("<div>").addClass("compGuess");
+    let guess = $("<div>").addClass("coord").addClass("compGuess");
     $(guess).css({marginLeft: (60*x)+"px", marginTop: (60*y)+"px"});
     $(guess).text("x");
 

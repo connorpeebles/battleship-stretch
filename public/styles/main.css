@@ -1,3 +1,5 @@
+/* CSS for all of the elements rendered directly in index.ejs */
+
 #title{
   position: absolute;
   top: 45px;
@@ -10,10 +12,9 @@
   writing-mode: vertical-lr;
 }
 
-#userTitle{
+.gridTitle{
   position: absolute;
   top: 20px;
-  margin-left: 119px;
   width: 660px;
   text-align: center;
   font-size: 18pt;
@@ -22,74 +23,30 @@
   line-height: 20px;
 }
 
-#compTitle{
-  position: absolute;
-  top: 20px;
+#userTitle.gridTitle{
+  margin-left: 119px;
+}
+
+#compTitle.gridTitle{
   margin-left: 839px;
-  width: 660px;
-  text-align: center;
-  font-size: 18pt;
-  font-weight: bold;
-  font-family: 'Rock Salt', cursive;
-  line-height: 20px;
 }
 
-#userGrid{
-  position: relative;
+.grid{
   margin-top: 59px;
-  margin-left: 119px;
   width: 660px;
   height: 660px;
   background: #778899;
 }
 
-#compGrid{
+#userGrid.grid{
+  position: relative;
+  margin-left: 119px;
+}
+
+#compGrid.grid{
   position: absolute;
   top: 0;
-  margin-top: 59px;
   margin-left: 839px;
-  width: 660px;
-  height: 660px;
-  background: #778899;
-}
-
-.userCoord{
-  position: absolute;
-  width: 58px;
-  height: 58px;
-  border: 1px solid #000000;
-  text-align: center;
-  line-height: 60px;
-}
-
-.compCoord{
-  position: absolute;
-  width: 58px;
-  height: 58px;
-  border: 1px solid #000000;
-  text-align: center;
-  line-height: 60px;
-}
-
-.refCoord{
-  position: absolute;
-  width: 58px;
-  height: 58px;
-  border: 1px solid #000000;
-  text-align: center;
-  line-height: 60px;
-  background: #696969;
-}
-
-.compGuess{
-  position: absolute;
-  width: 58px;
-  height: 58px;
-  text-align: center;
-  line-height: 60px;
-  font-size: 40pt;
-  font-weight: bold;
-  color: #FFFFFF;
 }
 
 #carrier{

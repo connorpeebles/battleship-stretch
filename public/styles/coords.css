@@ -1,0 +1,21 @@
+/* CSS for all coordinate elements rendered onto the grids */
+
+.coord{
+  position: absolute;
+  width: 58px;
+  height: 58px;
+  border: 1px solid #000000;
+  text-align: center;
+  line-height: 60px;
+}
+
+.coord.refCoord{
+  background: #696969;
+}
+
+.coord.compGuess{
+  font-family: 'Rock Salt', cursive;
+  font-size: 40pt;
+  font-weight: bold;
+  color: #FFFFFF;
+}
