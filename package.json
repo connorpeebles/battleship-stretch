@@ -19,10 +19,7 @@
   "homepage": "https://github.com/connorpeebles/battleship-stretch#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
-    "browserify": "^16.2.3",
-    "browserify-fs": "^1.0.0",
     "ejs": "^2.6.1",
-    "express": "^4.16.3",
-    "nodemon": "^1.18.4"
+    "express": "^4.16.4"
   }
 }
