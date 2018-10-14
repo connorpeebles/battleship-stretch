@@ -128,7 +128,14 @@ function fillGrid(grid, coordClass) {
 
 }
 
-//function checkCoords(top, left, vertical, ship, coordList) {
+// checkCoords takes in an array of coordinates "coordList" and an array of length four "shipPosition",
+// where:
+//   shipPosition[0] is a jQuery element representing a ship
+//   shipPosition[1] is an integer representing the top of the ship, in pixels, relative to its grid
+//   shipPosition[2] is an integer representing the left of the ship, in pixels, relative to its grid
+//   shipPosition[3] is a boolean representing whether the ship is vertical (true) or horizontal (false)
+// and returns false if the ship overlaps with another ship already placed on the grid by checking its
+// coordinates against coordList, else places the ship and returns truthe gride
 function checkCoords(shipPosition, coordList) {
   let ship = shipPosition[0];
   let top = shipPosition[1];
@@ -138,6 +145,8 @@ function checkCoords(shipPosition, coordList) {
   let numCoords = ship.numCoords;
   let shipCoords = [];
 
+  // checks each coordinate of the ship being placed to see if overlaps with another ship already
+  // placed, and returns false if there is overlap
   while (numCoords > 0) {
     let coord = `${left},${top}`;
 
@@ -156,6 +165,7 @@ function checkCoords(shipPosition, coordList) {
     }
   }
 
+  // sets the coordinates of the ship if there is no overlap and returns true
   ship.coords = shipCoords;
   coords[coordList] = coords[coordList].concat(shipCoords);
   return true;
@@ -225,13 +235,18 @@ function placeUserShips(fleet, grid) {
   });
 }
 
+// placeCompShips takes in an array of ships "fleet" and randomly places them upon its grid
 function placeCompShips(fleet) {
 
+  // when all the ships have been placed, stop
   if (fleet.length === 0) {
     return;
   }
 
   let numTiles = fleet[0].numCoords;
+
+  // randomly determines whether the current ship being placed will be vertical or horizontal and
+  // its coordinates
   let vertical = Math.floor(Math.random() * 2);
   let top;
   let left;
@@ -246,6 +261,8 @@ function placeCompShips(fleet) {
 
   let shipPosition = [fleet[0], top, left, vertical];
 
+  // ensures the computer doesn't place ships on top of each other, then recursively calls
+  // placeCompShips to place the next ship in the fleet
   if (!checkCoords(shipPosition, "compCoords")) {
     placeCompShips(fleet);
   } else {
@@ -253,7 +270,12 @@ function placeCompShips(fleet) {
   }
 }
 
-function checkUserHit(x, y, coord, fleet) {
+//function checkUserHit(x, y, coord, fleet) {
+function checkUserHit(coordArr, fleet) {
+  let x = coordArr[0];
+  let y = coordArr[1];
+  let coord = `${x},${y}`;
+
   let letter = String.fromCharCode(64 + x);
 
   for (let ship of fleet) {
@@ -281,8 +303,10 @@ function checkUserHit(x, y, coord, fleet) {
   return false;
 }
 
+// userTurn is the main functioncall for when it is the user's turn to guess
 function userTurn() {
 
+  // end game if all of user's ships have been sunk (user loses)
   if (userFleet.length === 0) {
     $("#instructionBox").text("Oh no! You lost! :(");
     return;
@@ -290,19 +314,25 @@ function userTurn() {
 
   $("#instructionBox").text("Your turn! Click any blue square on your opponent's grid to fire!");
 
+  // user guesses a coordinate by clicking it
   $(".compCoord").click(function() {
     let y = Math.round(parseInt($(this).css("marginTop")) / 60);
     let x = Math.round(parseInt($(this).css("marginLeft")) / 60);
     let coord = `${x},${y}`;
 
+    // ensures user doesn't click a square they have already guessed
     if (userGuesses.includes(coord)) {
       $("#instructionBox").text("You've already fired here! Click any blue square on your opponent's grid.");
 
-    } else if (checkUserHit(x, y, coord, compFleet)) {
+    // if user guesses a coordinate of the computer's fleet (hit), display the coordinate as hit
+    // and call compTurn
+    } else if (checkUserHit([x, y], compFleet)) {
       $(".compCoord").off();
       $(this).css({background: "#FF0000"});
       userGuesses.push(coord);
 
+      // if the user guesses the final coordinate of the computer's fleet, display a winning
+      // message and allow the user to enter their name for the leaderboard
       if (compFleet.length === 0) {
         $("#instructionBox").text("Congratulations! You win! :)");
         $("#newGame").css({visibility: "hidden"});
@@ -313,6 +343,7 @@ function userTurn() {
       compTurn();
       return;
 
+    // if user misses, display the coordinate as missed and call compTurn
     } else {
       $(".compCoord").off();
       $(this).css({background: "#FFFFFF"});
@@ -453,7 +484,7 @@ function compGuess() {
 
 function compTurn() {
   setTimeout(compGuess, 2000);
-  setTimeout(userTurn, 5000);
+  setTimeout(userTurn, 4500);
 }
 
 // playBattleShip is the main functioncall to start the game
@@ -473,6 +504,4 @@ function playBattleship() {
 
   placeUserShips(userFleet, userGrid);
   placeCompShips(compFleet);
-
-  console.log(coords.compCoords);
 }
