@@ -1,53 +1,51 @@
-const express = require("express");
+const express = require('express');
+
 const app = express();
 
-app.use(express.static("public"));
-app.set("vie engine", "ejs");
+app.use(express.static('public'));
 
-const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({extended: true}));
+app.set('view engine', 'ejs');
 
-const fs = require("fs");
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+const fs = require('fs');
 
 const PORT = 8080;
 
-app.get("/", (req, res) => {
-  fs.readFile("leaderboard.json", function(err, data) {
+app.get('/', (req, res) => {
+  fs.readFile('leaderboard.json', (err, data) => {
     if (err) {
       throw err;
     } else {
       const obj = JSON.parse(data);
-      const userArr = [];
-      for (let user in obj) {
-        userArr.push([user, obj[user]]);
-      }
-      userArr.sort(function(a, b) {
-        return b[1] - a[1];
-      });
-      let templateVars = {userWins: userArr};
-      res.render("index.ejs", templateVars);
+      const userArr = Object.entries(obj);
+      userArr.sort((a, b) => b[1] - a[1]);
+      const templateVars = { userWins: userArr };
+      res.render('index.ejs', templateVars);
     }
   });
 });
 
-app.post("/", (req, res) => {
-  let name = req.body.name;
-  fs.readFile("leaderboard.json", function(err, data) {
-    if (err) {
-      throw err;
+app.post('/', (req, res) => {
+  const { name } = req.body;
+  fs.readFile('leaderboard.json', (errRead, data) => {
+    if (errRead) {
+      throw errRead;
     } else {
       const obj = JSON.parse(data);
       if (name in obj) {
-        obj[name]++;
+        obj[name] += 1;
       } else {
         obj[name] = 1;
       }
-      let json = JSON.stringify(obj);
-      fs.writeFile("leaderboard.json", json, function(err) {
-        if (err) {
-          throw err;
+      const json = JSON.stringify(obj);
+      fs.writeFile('leaderboard.json', json, (errWrite) => {
+        if (errWrite) {
+          throw errWrite;
         }
-        res.redirect("/");
+        res.redirect('/');
       });
     }
   });

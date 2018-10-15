@@ -1,17 +1,17 @@
 {
   "name": "battleship-stretch",
   "version": "1.0.0",
-  "description": "",
+  "description": "Single-page battleship application",
   "main": "battleship.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node express_server.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/connorpeebles/battleship-stretch.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Connor Peebles",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/connorpeebles/battleship-stretch/issues"
