@@ -14,6 +14,8 @@ const fs = require('fs');
 
 const PORT = 8080;
 
+// GET / renders the main battleship page and the users for the leaderboard
+// from the leaderboard.json file
 app.get('/', (req, res) => {
   fs.readFile('leaderboard.json', (err, data) => {
     if (err) {
@@ -28,6 +30,7 @@ app.get('/', (req, res) => {
   });
 });
 
+// POST / adds the winner to the leaderboard and then redirects to GET /
 app.post('/', (req, res) => {
   const { name } = req.body;
   fs.readFile('leaderboard.json', (errRead, data) => {
