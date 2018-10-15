@@ -168,97 +168,9 @@ function checkCoords(shipPosition, coordList) {
   return true;
 }
 
-// checkUserHit takes in an array of ships 'fleet' and an array of length two 'coordArr', where:
-//   coordArr[0] is an integer representing the x-coordinate of the user's guess
-//   coordArr[1] is an integer representing the y-coordinate of the user's guess
-// and returns true if the user guesses a coordinate in fleet (hit), else false (miss)
-function checkUserHit(coordArr, fleet) {
-  const x = coordArr[0];
-  const y = coordArr[1];
-  const coord = `${x},${y}`;
-
-  const letter = String.fromCharCode(64 + x);
-
-  // checks the coordinate against each ship in fleet
-  for (let i = 0; i < fleet.length; i += 1) {
-    const ship = fleet[i];
-    let index = ship.coords.indexOf(coord);
-
-    // if the coordinate is in the ships in fleet, return true (hit)
-    if (index > -1) {
-      ship.coords.splice(index, 1);
-
-      // if the coordinate is the final coordinate in ship, remove the ship from fleet
-      // (ship is sunk)
-      if (ship.coords.length === 0) {
-        const shipName = ship.name;
-        index = fleet.indexOf(ship);
-        fleet.splice(index, 1);
-        $('#instructionBox').text(`${letter}${y}: Hit! You sunk your opponent's ${shipName}!`);
-        const compShips = remainingShips(compFleet);
-        $('#shipsComp').text(`Ships remaining: ${compShips}`);
-      } else {
-        $('#instructionBox').text(`${letter}${y}: Hit!`);
-      }
-
-      return true;
-    }
-  }
-
-  // if the coordinate is not in the ships in fleet, return false (miss)
-  $('#instructionBox').text(`${letter}${y}: Miss!`);
-  return false;
-}
-
+// defining functions userTurn and compTurn before pickPlayerOne calls them
+let userTurn;
 let compTurn;
-
-// userTurn is the main functioncall for when it is the user's turn to guess
-function userTurn() {
-  // end game if all of user's ships have been sunk (user loses)
-  if (userFleet.length === 0) {
-    $('#instructionBox').text('Oh no! You lost! :(');
-    return;
-  }
-
-  $('#instructionBox').text('Your turn! Click any blue square on your opponent\'s grid to fire!');
-
-  // user guesses a coordinate by clicking it
-  $('.compCoord').click(function () {
-    const y = Math.round(parseInt($(this).css('marginTop'), 10) / 60);
-    const x = Math.round(parseInt($(this).css('marginLeft'), 10) / 60);
-    const coord = `${x},${y}`;
-
-    // ensures user doesn't click a square they have already guessed
-    if (userGuesses.includes(coord)) {
-      $('#instructionBox').text('You\'ve already fired here! Click any blue square on your opponent\'s grid.');
-
-    // if user guesses a coordinate of the computer's fleet (hit), display the coordinate as hit
-    // and call compTurn
-    } else if (checkUserHit([x, y], compFleet)) {
-      $('.compCoord').off();
-      $(this).css({ background: '#FF0000' });
-      userGuesses.push(coord);
-
-      // if the user guesses the final coordinate of the computer's fleet, display a winning
-      // message and allow the user to enter their name for the leaderboard
-      if (compFleet.length === 0) {
-        $('#instructionBox').text('Congratulations! You win! :)');
-        $('#newGame').css({ visibility: 'hidden' });
-        $('#enterName').css({ visibility: 'visible' });
-        return;
-      }
-
-      compTurn();
-
-    // if user misses, display the coordinate as missed and call compTurn
-    } else {
-      $('.compCoord').off();
-      $(this).css({ background: '#FFFFFF' });
-      userGuesses.push(coord);
-      compTurn();
-    }
-  });
-}
 
 // pickPlayerOne randomly determines whether the user or computer gets the first turn
 function pickPlayerOne() {
@@ -373,6 +285,96 @@ function placeCompShips(fleet) {
     placeCompShips(fleet.slice(1));
   }
 }
+
+// checkUserHit takes in an array of ships 'fleet' and an array of length two 'coordArr', where:
+//   coordArr[0] is an integer representing the x-coordinate of the user's guess
+//   coordArr[1] is an integer representing the y-coordinate of the user's guess
+// and returns true if the user guesses a coordinate in fleet (hit), else false (miss)
+function checkUserHit(coordArr, fleet) {
+  const x = coordArr[0];
+  const y = coordArr[1];
+  const coord = `${x},${y}`;
+
+  const letter = String.fromCharCode(64 + x);
+
+  // checks the coordinate against each ship in fleet
+  for (let i = 0; i < fleet.length; i += 1) {
+    const ship = fleet[i];
+    let index = ship.coords.indexOf(coord);
+
+    // if the coordinate is in the ships in fleet, return true (hit)
+    if (index > -1) {
+      ship.coords.splice(index, 1);
+
+      // if the coordinate is the final coordinate in ship, remove the ship from fleet
+      // (ship is sunk)
+      if (ship.coords.length === 0) {
+        const shipName = ship.name;
+        index = fleet.indexOf(ship);
+        fleet.splice(index, 1);
+        $('#instructionBox').text(`${letter}${y}: Hit! You sunk your opponent's ${shipName}!`);
+        const compShips = remainingShips(compFleet);
+        $('#shipsComp').text(`Ships remaining: ${compShips}`);
+      } else {
+        $('#instructionBox').text(`${letter}${y}: Hit!`);
+      }
+
+      return true;
+    }
+  }
+
+  // if the coordinate is not in the ships in fleet, return false (miss)
+  $('#instructionBox').text(`${letter}${y}: Miss!`);
+  return false;
+}
+
+// userTurn is the main functioncall for when it is the user's turn to guess
+userTurn = () => {
+  // end game if all of user's ships have been sunk (user loses)
+  if (userFleet.length === 0) {
+    $('#instructionBox').text('Oh no! You lost! :(');
+    return;
+  }
+
+  $('#instructionBox').text('Your turn! Click any blue square on your opponent\'s grid to fire!');
+
+  // user guesses a coordinate by clicking it
+  $('.compCoord').click(function () {
+    const y = Math.round(parseInt($(this).css('marginTop'), 10) / 60);
+    const x = Math.round(parseInt($(this).css('marginLeft'), 10) / 60);
+    const coord = `${x},${y}`;
+
+    // ensures user doesn't click a square they have already guessed
+    if (userGuesses.includes(coord)) {
+      $('#instructionBox').text('You\'ve already fired here! Click any blue square on your opponent\'s grid.');
+
+    // if user guesses a coordinate of the computer's fleet (hit), display the coordinate as hit
+    // and call compTurn
+    } else if (checkUserHit([x, y], compFleet)) {
+      $('.compCoord').off();
+      $(this).css({ background: '#FF0000' });
+      userGuesses.push(coord);
+
+      // if the user guesses the final coordinate of the computer's fleet, display a winning
+      // message and allow the user to enter their name for the leaderboard
+      if (compFleet.length === 0) {
+        $('#instructionBox').text('Congratulations! You win! :)');
+        $('#newGame').css({ visibility: 'hidden' });
+        $('#enterName').css({ visibility: 'visible' });
+        return;
+      }
+
+      compTurn();
+
+    // if user misses, display the coordinate as missed and call compTurn
+    } else {
+      $('.compCoord').off();
+      $(this).css({ background: '#FFFFFF' });
+      userGuesses.push(coord);
+      compTurn();
+    }
+  });
+};
 
 // checkCompHit takes in an array of ships 'fleet' and an array of length two 'coordArr', where:
 //   coordArr[0] is an integer representing the x-coordinate of the computer's guess
