@@ -14,6 +14,7 @@
 }
 
 .coord.compGuess{
+  border: none;
   font-family: 'Rock Salt', cursive;
   font-size: 40pt;
   font-weight: bold;

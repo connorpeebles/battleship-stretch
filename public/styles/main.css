@@ -49,85 +49,25 @@
   margin-left: 839px;
 }
 
-#carrier{
-  width: 298px;
+.shipsRemaining{
   position: absolute;
-  top: 60px;
-  left: 60px;
-  height: 58px;
-  border: 1px solid #000000;
-  border-radius: 50%;
+  margin-top: 10px;
+  width: 659px;
+  height: 70px;
+  text-align: left;
+  font-size: 16pt;
+  font-family: 'Oswald', sans-serif;
   background: #C0C0C0;
+  border: 1px solid #000000;
 }
 
-#battleship{
-  width: 238px;
-  position: absolute;
-  top: 60px;
-  left: 60px;
-  height: 58px;
-  border: 1px solid #000000;
-  border-radius: 50%;
-  background: #C0C0C0;
-}
-
-#cruiser{
-  width: 178px;
-  position: absolute;
-  top: 60px;
-  left: 60px;
-  height: 58px;
-  border: 1px solid #000000;
-  border-radius: 50%;
-  background: #C0C0C0;
-}
-
-#submarine{
-  width: 178px;
-  position: absolute;
-  top: 60px;
-  left: 60px;
-  height: 58px;
-  border: 1px solid #000000;
-  border-radius: 50%;
-  background: #C0C0C0;
-}
-
-#destroyer{
-  width: 118px;
-  position: absolute;
-  top: 60px;
-  left: 60px;
-  height: 58px;
-  border: 1px solid #000000;
-  border-radius: 50%;
-  background: #C0C0C0;
-}
-
-#shipsUser{
-  position: absolute;
+#shipsUser.shipsRemaining{
   margin-left: 119px;
-  margin-top: 10px;
-  width: 659px;
-  height: 70px;
-  text-align: left;
-  font-size: 16pt;
-  font-family: 'Oswald', sans-serif;
-  background: #C0C0C0;
-  border: 1px solid #000000;
 }
 
-#shipsComp{
-  position: absolute;
+#shipsComp.shipsRemaining{
   margin-left: 839px;
-  margin-top: 10px;
-  width: 659px;
-  height: 70px;
-  text-align: left;
-  font-size: 16pt;
-  font-family: 'Oswald', sans-serif;
-  background: #C0C0C0;
-  border: 1px solid #000000;
+
 }
 
 #leaderboard{

@@ -18,10 +18,10 @@
     <div id="userGrid" class="grid"></div>
     <div id="compTitle" class="gridTitle">Opponent's Grid</div>
     <div id="compGrid" class="grid"></div>
-    <div id="shipsUser"></div>
-    <div id="shipsComp"></div>
+    <div id="shipsUser" class="shipsRemaining"></div>
+    <div id="shipsComp" class="shipsRemaining"></div>
     <div id="leaderboard">
-        <b style="font-size:18pt">Leaderboard</b>
+        <b style="font-size:18pt">Leaderboard:</b>
         <% for (let user of userWins) { %>
         <% let wins = "wins"; %>
         <% if (user[1] == 1) wins = "win"; %>

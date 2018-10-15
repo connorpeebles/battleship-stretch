@@ -8,31 +8,31 @@ const userFleet = [
     name: "carrier",
     numCoords: 5,
     coords: [],
-    jq: $("<div>").attr("id", "carrier")
+    jq: $("<div>").attr("id", "carrier").addClass("ship")
   },
   {
     name: "battleship",
     numCoords: 4,
     coords: [],
-    jq:$("<div>").attr("id", "battleship")
+    jq:$("<div>").attr("id", "battleship").addClass("ship")
   },
   {
     name: "cruiser",
     numCoords: 3,
     coords: [],
-    jq: $("<div>").attr("id", "cruiser")
+    jq: $("<div>").attr("id", "cruiser").addClass("ship")
   },
   {
     name: "submarine",
     numCoords: 3,
     coords: [],
-    jq: $("<div>").attr("id", "submarine")
+    jq: $("<div>").attr("id", "submarine").addClass("ship")
   },
   {
     name: "destroyer",
     numCoords: 2,
     coords: [],
-    jq: $("<div>").attr("id", "destroyer")
+    jq: $("<div>").attr("id", "destroyer").addClass("ship")
   }
 ];
 
@@ -173,13 +173,26 @@ function checkCoords(shipPosition, coordList) {
   return true;
 }
 
+// pickPlayerOne randomly determines whether the user or computer gets the first turn
+function pickPlayerOne() {
+  let rand = Math.floor(Math.random() * 2);
+
+  if (rand === 0) {
+    $("#instructionBox").text("You get to go first! Woohoo!");
+    setTimeout(userTurn, 3500);
+  } else {
+    $("#instructionBox").text("Your oppenent gets to go first. Better luck next time!");
+    setTimeout(compTurn, 3500);
+  }
+}
+
 // placeUserShips takes in an array of ships "fleet" and a jQuery element "grid" representing the
 // grid on which the ships in "fleet" will be appended to
 function placeUserShips(fleet, grid) {
 
   // when all the ships have been placed, start the game
   if (fleet.length === 0) {
-    userTurn();
+    pickPlayerOne();
     return;
   }
 

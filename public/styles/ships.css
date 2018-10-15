@@ -1,0 +1,31 @@
+/* CSS for all ship elements rendered onto the grids */
+
+.ship{
+  position: absolute;
+  top: 60px;
+  left: 60px;
+  height: 58px;
+  border: 1px solid #000000;
+  border-radius: 50%;
+  background: #C0C0C0;
+}
+
+#carrier.ship{
+  width: 298px;
+}
+
+#battleship.ship{
+  width: 238px;
+}
+
+#cruiser.ship{
+  width: 178px;
+}
+
+#submarine.ship{
+  width: 178px;
+}
+
+#destroyer.ship{
+  width: 118px;
+}
