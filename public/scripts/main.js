@@ -178,10 +178,10 @@ function pickPlayerOne() {
 
   if (rand === 0) {
     $('#instructionBox').text('You get to go first! Woohoo!');
-    setTimeout(userTurn, 3500);
+    setTimeout(userTurn, 3000);
   } else {
     $('#instructionBox').text('Your oppenent gets to go first. Better luck next time!');
-    setTimeout(compTurn, 3500);
+    setTimeout(compTurn, 3000);
   }
 }
 
